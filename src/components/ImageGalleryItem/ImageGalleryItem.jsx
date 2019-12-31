@@ -1,15 +1,16 @@
 import React from 'react';
 import T from 'prop-types';
+import styles from './imageGalleryItem.module.css';
 
 const ImageGalleryItem = ({ images }) => {
   return (
     images.length > 0 &&
     images.map(el => (
-      <li key={el.id} className="ImageGalleryItem">
+      <li key={el.id} className={styles.imageGalleryItem}>
         <img
           src={el.webformatURL}
           alt={el.tags}
-          className="ImageGalleryItem-image"
+          className={styles.imageGalleryItemImage}
         />
       </li>
     ))
