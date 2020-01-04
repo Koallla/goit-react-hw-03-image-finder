@@ -1,27 +1,21 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-// import Loader from 'react-loader-spinner';
-// import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
-// import PNotify from 'pnotify/dist/es/PNotify';
 import styles from './app.module.css';
-// import Button from '../Button/Button';
-// import ImageGallery from '../ImageGallery/ImageGallery';
-// import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
-// import Loader from '../Loader/Loader';
-// import Modal from '../Modal/Modal';
-// import SearchBar from '../SearchBar/SearchBar';
 import SearchBar from '../SearchBar/SearchBar';
 import ImageGallery from '../ImageGallery/ImageGallery';
 import Button from '../Button/Button';
+import Loader from '../Loader/Loader';
+import Modal from '../Modal/Modal';
 
 const KEY = '14352220-777927f32e4bda0aacdcec250';
 
 export default class App extends Component {
   state = {
     images: [],
-    // isLoading: false,
+    isLoading: false,
     searchQuery: '',
     pageNumber: 1,
+    isModalOpen: false,
   };
 
   componentDidMount() {}
@@ -39,6 +33,7 @@ export default class App extends Component {
 
   getImages = async () => {
     try {
+      this.setState({ isLoading: true });
       const { searchQuery, pageNumber } = this.state;
       await axios
         .get(
@@ -52,7 +47,7 @@ export default class App extends Component {
     } catch (err) {
       throw err;
     }
-
+    this.setState({ isLoading: false });
     this.scrolling();
   };
 
@@ -64,12 +59,6 @@ export default class App extends Component {
     this.setState(prevState => ({
       pageNumber: prevState.pageNumber + 1,
     }));
-    // await this.getImages();
-    // setTimeout(this.scrolling, 1000);
-    // window.scrollTo({
-    //   top: document.documentElement.scrollHeight,
-    //   behavior: 'smooth',
-    // });
   };
 
   scrolling = () => {
@@ -79,13 +68,33 @@ export default class App extends Component {
     });
   };
 
+  openModal = e => {
+    this.setState({ isModalOpen: true });
+    this.modalWithImg(e);
+  };
+
+  modalWithImg = event => {
+    const srcimg = event.target.srcset;
+    console.log(srcimg);
+  };
+
+  closeModal = () => {
+    this.setState({ isModalOpen: false });
+  };
+
   render() {
-    const { images } = this.state;
+    const { images, isLoading, isModalOpen } = this.state;
     return (
       <div className={styles.container}>
         <SearchBar onSubmit={this.onSubmitSearchBar} />
-        <ImageGallery images={images} />
+
+        <ImageGallery images={images} isOpenModal={this.openModal} />
+
         {images.length !== 0 && <Button loadNextPage={this.onLoadNextPage} />}
+        {isLoading && <Loader />}
+        {isModalOpen && (
+          <Modal onClose={this.closeModal} onOpen={this.modalWithImg} />
+        )}
       </div>
     );
   }
