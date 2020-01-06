@@ -1,17 +1,21 @@
 import React from 'react';
 import T from 'prop-types';
+import ReactImageAppear from 'react-image-appear';
 import styles from './imageGalleryItem.module.css';
 
-const ImageGalleryItem = ({ images, openModal }) => {
+const ImageGalleryItem = ({ images }) => {
   return (
     images.length > 0 &&
     images.map(el => (
-      <li key={el.id} className={styles.imageGalleryItem}>
-        <img
+      <li
+        src={el.largeImageURL}
+        key={el.id}
+        className={styles.imageGalleryItem}
+      >
+        <ReactImageAppear
           src={el.webformatURL}
-          srcSet={el.largeImageURL}
+          animation="bounceIn"
           alt={el.tags}
-          onClick={openModal}
           className={styles.imageGalleryItemImage}
         />
       </li>
@@ -25,7 +29,6 @@ ImageGalleryItem.defaultProps = {
 
 ImageGalleryItem.propTypes = {
   images: T.arrayOf(T.shape({})),
-  openModal: T.func.isRequired,
 };
 
 export default ImageGalleryItem;

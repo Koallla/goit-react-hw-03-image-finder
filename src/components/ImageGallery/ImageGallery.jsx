@@ -5,8 +5,8 @@ import styles from './imageGallery.module.css';
 
 const ImageGallery = ({ images, isOpenModal }) => {
   return (
-    <ul className={styles.imageGallery}>
-      <ImageGalleryItem images={images} openModal={isOpenModal} />
+    <ul onClick={isOpenModal} className={styles.imageGallery}>
+      <ImageGalleryItem images={images} />
     </ul>
   );
 };

@@ -13,6 +13,7 @@
     "pnotify": "^4.0.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-image-appear": "^1.2.22",
     "react-loader-spinner": "^3.1.5",
     "react-scripts": "^3.3.0",
     "serialize-javascript": "^2.1.2",

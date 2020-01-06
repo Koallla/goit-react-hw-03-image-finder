@@ -56,7 +56,7 @@ export default class App extends Component {
   };
 
   onSubmitSearchBar = value => {
-    this.setState({ searchQuery: value });
+    this.setState({ searchQuery: value, pageNumber: 1, images: [] });
   };
 
   onLoadNextPage = () => {
@@ -75,19 +75,12 @@ export default class App extends Component {
   openModal = e => {
     this.setState({
       imgForModal: {
-        img: e.target.srcset,
+        img: e.target.parentNode.attributes[0].value,
         alt: e.target.alt,
       },
     });
     this.setState({ isModalOpen: true });
-
-    console.dir(e.target.srcset);
   };
-
-  // modalWithImg = event => {
-  //   const srcimg = event.target.srcset;
-  //   console.log(srcimg);
-  // };
 
   closeModal = () => {
     this.setState({ isModalOpen: false });
@@ -99,9 +92,7 @@ export default class App extends Component {
     return (
       <div className={styles.container}>
         {!isModalOpen && <SearchBar onSubmit={this.onSubmitSearchBar} />}
-
         <ImageGallery images={images} isOpenModal={this.openModal} />
-
         {images.length !== 0 && <Button loadNextPage={this.onLoadNextPage} />}
         {isLoading && <Loader />}
         {isModalOpen && (
