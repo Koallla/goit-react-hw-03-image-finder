@@ -16,6 +16,10 @@ export default class App extends Component {
     searchQuery: '',
     pageNumber: 1,
     isModalOpen: false,
+    imgForModal: {
+      img: '',
+      alt: '',
+    },
   };
 
   componentDidMount() {}
@@ -69,31 +73,39 @@ export default class App extends Component {
   };
 
   openModal = e => {
+    this.setState({
+      imgForModal: {
+        img: e.target.srcset,
+        alt: e.target.alt,
+      },
+    });
     this.setState({ isModalOpen: true });
-    this.modalWithImg(e);
+
+    console.dir(e.target.srcset);
   };
 
-  modalWithImg = event => {
-    const srcimg = event.target.srcset;
-    console.log(srcimg);
-  };
+  // modalWithImg = event => {
+  //   const srcimg = event.target.srcset;
+  //   console.log(srcimg);
+  // };
 
   closeModal = () => {
     this.setState({ isModalOpen: false });
   };
 
   render() {
-    const { images, isLoading, isModalOpen } = this.state;
+    const { images, isLoading, isModalOpen, imgForModal } = this.state;
+
     return (
       <div className={styles.container}>
-        <SearchBar onSubmit={this.onSubmitSearchBar} />
+        {!isModalOpen && <SearchBar onSubmit={this.onSubmitSearchBar} />}
 
         <ImageGallery images={images} isOpenModal={this.openModal} />
 
         {images.length !== 0 && <Button loadNextPage={this.onLoadNextPage} />}
         {isLoading && <Loader />}
         {isModalOpen && (
-          <Modal onClose={this.closeModal} onOpen={this.modalWithImg} />
+          <Modal onClose={this.closeModal} srcForModal={imgForModal} />
         )}
       </div>
     );

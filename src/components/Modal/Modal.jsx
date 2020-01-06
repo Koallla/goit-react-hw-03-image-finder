@@ -5,7 +5,7 @@ import styles from './modal.module.css';
 class Modal extends Component {
   static propTypes = {
     onClose: T.func.isRequired,
-    onOpen: T.func.isRequired,
+    srcForModal: T.objectOf(T.string).isRequired,
   };
 
   state = {};
@@ -17,14 +17,6 @@ class Modal extends Component {
   componentWillUnmount() {
     window.removeEventListener('keydown', this.closeOnEscape);
   }
-
-  // openModal = () => {
-  //   this.setState({ isModalOpen: true });
-  // };
-
-  // closeModal = () => {
-  //   this.setState({ isModalOpen: false });
-  // };
 
   closeOnEscape = e => {
     if (e.code !== 'Escape') {
@@ -42,14 +34,9 @@ class Modal extends Component {
     onClose();
   };
 
-  // openWithImg = e => {
-  //   const { onOpen } = this.props;
-  //   onOpen(e.target);
-  // };
-
   render() {
-    const { onOpen } = this.props;
-    console.log(onOpen);
+    const { srcForModal } = this.props;
+
     return (
       <div
         onClick={this.handleCloseModal}
@@ -57,7 +44,7 @@ class Modal extends Component {
         role="presentation"
       >
         <div className={styles.modal}>
-          <img src="" alt="" />
+          <img src={srcForModal.img} alt={srcForModal.alt} />
         </div>
       </div>
     );
