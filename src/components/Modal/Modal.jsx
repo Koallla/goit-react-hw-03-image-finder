@@ -8,8 +8,6 @@ class Modal extends Component {
     srcForModal: T.objectOf(T.string).isRequired,
   };
 
-  state = {};
-
   componentDidMount() {
     window.addEventListener('keydown', this.closeOnEscape);
   }

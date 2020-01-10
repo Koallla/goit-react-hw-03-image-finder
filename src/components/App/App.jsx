@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import PNotify from 'pnotify/dist/es/PNotify';
 import styles from './app.module.css';
 import SearchBar from '../SearchBar/SearchBar';
 import ImageGallery from '../ImageGallery/ImageGallery';
 import Button from '../Button/Button';
 import Loader from '../Loader/Loader';
 import Modal from '../Modal/Modal';
-
-const KEY = '14352220-777927f32e4bda0aacdcec250';
+import API from '../API/API';
+import 'pnotify/dist/PNotifyBrightTheme.css';
 
 export default class App extends Component {
   state = {
@@ -16,7 +16,7 @@ export default class App extends Component {
     searchQuery: '',
     pageNumber: 1,
     isModalOpen: false,
-    imgForModal: {
+    imgModal: {
       img: '',
       alt: '',
     },
@@ -36,21 +36,18 @@ export default class App extends Component {
   }
 
   getImages = async () => {
+    this.setState({ isLoading: true });
+    const { searchQuery, pageNumber } = this.state;
     try {
-      this.setState({ isLoading: true });
-      const { searchQuery, pageNumber } = this.state;
-      await axios
-        .get(
-          `https://pixabay.com/api/?key=${KEY}&q=${searchQuery}&page=${pageNumber}&image_type=photo&orientation=horizontal&per_page=12`,
-        )
-        .then(res =>
-          this.setState(prevState => ({
-            images: [...prevState.images, ...res.data.hits],
-          })),
-        );
-    } catch (err) {
-      throw err;
+      await API(searchQuery, pageNumber).then(res =>
+        this.setState(prevState => ({
+          images: [...prevState.images, ...res.data.hits],
+        })),
+      );
+    } catch (error) {
+      PNotify.error('Loading error!');
     }
+
     this.setState({ isLoading: false });
     this.scrolling();
   };
@@ -74,7 +71,7 @@ export default class App extends Component {
 
   openModal = e => {
     this.setState({
-      imgForModal: {
+      imgModal: {
         img: e.target.parentNode.attributes[0].value,
         alt: e.target.alt,
       },
@@ -87,7 +84,7 @@ export default class App extends Component {
   };
 
   render() {
-    const { images, isLoading, isModalOpen, imgForModal } = this.state;
+    const { images, isLoading, isModalOpen, imgModal } = this.state;
 
     return (
       <div className={styles.container}>
@@ -96,7 +93,7 @@ export default class App extends Component {
         {images.length !== 0 && <Button loadNextPage={this.onLoadNextPage} />}
         {isLoading && <Loader />}
         {isModalOpen && (
-          <Modal onClose={this.closeModal} srcForModal={imgForModal} />
+          <Modal onClose={this.closeModal} srcForModal={imgModal} />
         )}
       </div>
     );
